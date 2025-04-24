@@ -160,7 +160,7 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		if(syst == 5){ cent = (int) (0.98 * (float)hiBin / 0.95);
 		} else if(syst == 6){ cent = (int) (0.92 * (float)hiBin / 0.95);
 		} else{ cent = (int) hiBin; }
-
+		cent = 1; // hiBin not stored well in the forest yet
 		int Ntroff = get_Ntrkoff( trkpt, trketa, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr);
 
 		centrality_beforefilters->Fill(cent);
