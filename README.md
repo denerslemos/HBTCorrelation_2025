@@ -21,20 +21,20 @@ I have added same submission idea as XeXe, see here: ,also bellow the line but n
  
 You can run it using (no mixing, no 3D):
 ```
-root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 1, 10, 5, 2.0, 1, 0, 0, 0)" &> out.txt &
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 1, 10, 1000, 50.0, 1, 0, 0, 0)" &> out.txt &
 ```
 Adding mixing (no 3D):
 ```
-root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 0, 10, 5, 2.0, 1, 0, 0, 0)" &> out.txt &
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 0, 10, 1000, 50.0, 1, 0, 0, 0)" &> out.txt &
 ```
 Adding 3D (no mixing):
 ```
-root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 1, 10, 5, 2.0, 0, 0, 0, 0)" &> out.txt &
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 1, 10, 1000, 50.0, 0, 0, 0, 0)" &> out.txt &
 ```
 
 Adding all:
 ```
-root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 0, 10, 5, 2.0, 0, 0, 0, 0)" &> out.txt &
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 0, 10, 1000, 50.0, 0, 0, 0, 0)" &> out.txt &
 ```
 
 all of the examples run both gen and reco.

@@ -298,9 +298,11 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 				// Kinematic and charge cuts
 				if(fabs(gen_trketa->at(j)) > 2.4) continue;
 				if(gen_trkpt->at(j) <= 0.2)continue;
+				if(fabs(gen_trkchg->at(j)) == 0) continue;
 				// Track/particle QA histogram filling
 				double x_gen_trk[5]={gen_trkpt->at(j), gen_trketa->at(j), gen_trkphi->at(j), (double) gen_trkchg->at(j), (double) (use_centrality ? cent : Ntroff) }; 	
-		    	ROOT::Math::PtEtaPhiMVector TrackFourVectorGen;
+				hist_gen_trk->Fill(x_gen_trk);
+				ROOT::Math::PtEtaPhiMVector TrackFourVectorGen;
       			TrackFourVectorGen.SetM(pi_mass);
       			TrackFourVectorGen.SetEta(gen_trketa->at(j));
      			TrackFourVectorGen.SetPhi(gen_trkphi->at(j));

@@ -42,7 +42,7 @@ void MixEvents(bool use_centrality, int centrality_or_ntrkoff_int, int nEvt_to_m
          int nMix_nevt_ass = (int)Track_nevt_ass_vec.size();  // track vector size for associate
 
          n_associated = n_associated + 1; // if pass the requirements sum 1
-         
+      	 if(n_associated > nEvt_to_mix)break;   
          // loop and fill correlation histograms
 	 	 for (int ipair = 0; ipair < (nMix_nevt_trg * nMix_nevt_ass); ipair++){ // start loop over tracks
 
@@ -76,7 +76,7 @@ void MixEvents(bool use_centrality, int centrality_or_ntrkoff_int, int nEvt_to_m
 				if(do_hbt3d) histo_OS3D->Fill(x_2pc_hbt_3D,coulomb_os*tot_eff);			
 			}						
          } // end of correlation loop
-         if(n_associated == nEvt_to_mix)break;
+      if(n_associated == nEvt_to_mix)break;
       } // end of associate loop
       NeventsAss->Fill(n_associated);
    } // end of all events loop
