@@ -17,40 +17,24 @@ The code was created to generate histograms as function of centrality or multipl
 ```
 git clone https://github.com/denerslemos/HBTCorrelation_2025.git
 ```
-I have added same submission idea as XeXe, see here: ,also bellow the line but need to edit the submit*.py. So far we have one MC test file that can be used. All tests here are centrality dependency, check XeXe instructions to how move it to multiplicity dependency.
+I have added same submission idea as XeXe, see here: ,also bellow the line but need to edit the submit*.py. So far we have one MC test file that can be used. All tests here are centrality dependency, check XeXe instructions to how move it to multiplicity dependency. For the small amount of events here I will not use condor.
  
 You can run it using (no mixing, no 3D):
 ```
-root -l -b -q 
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 1, 10, 5, 2.0, 1, 0, 0, 0)" &> out.txt &
 ```
 Adding mixing (no 3D):
 ```
-
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 0, 10, 5, 2.0, 1, 0, 0, 0)" &> out.txt &
 ```
 Adding 3D (no mixing):
 ```
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 1, 10, 5, 2.0, 0, 0, 0, 0)" &> out.txt &
 ```
 
 Adding all:
 ```
-```
- 
-To submit via condor (suggested if you will add mixing or 3D), you can use the test (remember to edit lines 7 to 11):
-```
-python3 submit_OOtest.py
+root -l -b -q "correlation_2025.C(\"inputdataset/OO_MC_4ktest.txt\",\"out_OO.root\", 1, 0, 0, 10, 5, 2.0, 0, 0, 0, 0)" &> out.txt &
 ```
 
-
-__________________________________________________________________________________________________________________________________________________________________
-
-You have to edit lines 7 and 11 of ```submit_cent.py```: outputfolder - output folder to store your own histograms; cmsswrepo - CMSSW repository CMSSW/src; pwdrepo - the repository where the code is; it is also possible to change the systematics by changing an integer as described in the beginning of the .C code.
-To run the codes you just need to:
-```
-python3 submit_cent.py
-```
-this will submit all condor jobs and produce the root files in the output folder.
-- For the multiplicity dependency, the same code can be used. I have used similar histograms as the ones used in previous PbPb analysis (FSQ-14-002) with bins from 10 to 250 (also matching pPb). This must run faster due the small amount of combinations. In this case you have to edit line 4 and 5 in ```correlation_XeXe.C```, just uncomment one and comment the other one.
-Also, submit the condor jobs using: 
-```
-python3 submit_mult.py
-```
+all of the examples run both gen and reco.

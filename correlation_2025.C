@@ -1,4 +1,3 @@
-#include "call_libraries.h" // call libraries from ROOT and C++
 #include "read_tree.h" // read the TChains
 #include "tracking_correction.h" // tracking correction
 #include "define_histograms_cent.h" // histogram definition
@@ -99,8 +98,8 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 
 	// Read the trees to be added in the Chain
 	TChain *hea_tree = new TChain("hiEvtAnalyzer/HiTree"); // event quantities
-	TChain *ski_tree = new TChain("skimanalysis/HltTree"); // event filters
-	TChain *trk_tree = new TChain("ppTrack/trackTree"); // for tracking
+	//TChain *ski_tree = new TChain("skimanalysis/HltTree"); // event filters
+	TChain *trk_tree = new TChain("ppTracks/trackTree"); // for tracking
 	TChain *gen_tree;
 	if(is_MC){gen_tree = new TChain("HiGenParticleAna/hi");} // MC gen particles
 	// loop to add all the trees to the chain
@@ -109,7 +108,7 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		if(testfile && !testfile->IsZombie() && !testfile->TestBit(TFile::kRecovered)){ // safety against corrupted files
 		cout << "Adding file " << *listIterator << " to the chains" << endl; // adding files to the chains for each step
 		hea_tree->Add(*listIterator);
-		ski_tree->Add(*listIterator);
+		//ski_tree->Add(*listIterator);
 		trk_tree->Add(*listIterator);
 		if(is_MC){gen_tree->Add(*listIterator);}
 		}else{cout << "File: " << *listIterator << " failed!" << endl;}		
@@ -117,7 +116,7 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 	file_name_vector.clear();	
 	
 	// Connect all chains
-	hea_tree->AddFriend(ski_tree);
+	//hea_tree->AddFriend(ski_tree);
 	hea_tree->AddFriend(trk_tree);
 	if(is_MC){hea_tree->AddFriend(gen_tree);}
 	
@@ -155,14 +154,14 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		hea_tree->GetEntry(i); // get events from ttree
 
 		if(i != 0 && (i % 100) == 0){double alpha = (double)i; cout << " Running -> percentage: " << std::setprecision(3) << ((alpha / nev) * 100) << "%" << endl;} // % processed
-		if(do_quicktest){if(i != 0 && i % 200 == 0 ) break;} // just for quick tests
+		if(do_quicktest){if(i != 0 && i % 1000 == 0 ) break;} // just for quick tests
 
 		int cent;
 		if(syst == 5){ cent = (int) (0.98 * (float)hiBin / 0.95);
 		} else if(syst == 6){ cent = (int) (0.92 * (float)hiBin / 0.95);
 		} else{ cent = (int) hiBin; }
 
-		int Ntroff = get_Ntrkoff(trkpt, trketa, trkcharge, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr);
+		int Ntroff = get_Ntrkoff( trkpt, trketa, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr);
 
 		centrality_beforefilters->Fill(cent);
 		vzhist_beforefilters->Fill(vertexz);
@@ -219,7 +218,7 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 			hist_reco_trk_beforeselection->Fill(x_reco_trk);
 			ptresolution_beforeselection->Fill(fabs(trkpterr->at(j)/trkpt->at(j)));
 			dxyoversigmadxy_beforeselection->Fill((trkdcaxy->at(j)/trkdcaxyerr->at(j)));
-			dzoversigmadz_beforeselection->Fill((trkdcaz[->at(j)/trkdcazerr->at(j)));
+			dzoversigmadz_beforeselection->Fill((trkdcaz->at(j)/trkdcazerr->at(j)));
 			chi2overNDFoverNLayer_beforeselection->Fill(trknormchi2->at(j)/(float)NLayer);
 			nhits_beforeselection->Fill((float)NHits);
 			npixelhit_beforeselection->Fill((float)Npixelhit);

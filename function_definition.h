@@ -18,33 +18,30 @@ dcaxyerr: track DCA in the transverse plane uncertainty
 dcaz: track DCA in the longitudinal plane
 dcazerr: track DCA in the longitudinal plane uncertainty
 */
-int get_Ntrkoff(const std::vector<float>& pt,
-                const std::vector<float>& eta,
-                const std::vector<int>& charge,
-                const std::vector<bool>& hp,
-                const std::vector<float>& pterr,
-                const std::vector<float>& dcaxy,
-                const std::vector<float>& dcaxyerr,
-                const std::vector<float>& dcaz,
-                const std::vector<float>& dcazerr) {
+int get_Ntrkoff(std::vector<float>* pt,
+                std::vector<float>* eta,
+                std::vector<bool>* hp,
+                std::vector<float>* pterr,
+                std::vector<float>* dcaxy,
+                std::vector<float>* dcaxyerr,
+                std::vector<float>* dcaz,
+                std::vector<float>* dcazerr) {
     
     int Ntrk_off = 0;
-    size_t size = pt.size();
+    int size = pt->size();
 
-    for (size_t ii = 0; ii < size; ++ii) {
+    for (int ii = 0; ii < size; ++ii) {
         if (pt->at(ii) <= 0.3) continue;
         if (std::fabs(eta->at(ii)) > 2.4) continue;
-        if (charge->at(ii) == 0) continue;
         if (!hp->at(ii)) continue;
         if (std::fabs(pterr->at(ii) / pt->at(ii)) >= 0.1) continue;
         if (std::fabs(dcaxy->at(ii) / dcaxyerr->at(ii)) >= 3.0) continue;
         if (std::fabs(dcaz->at(ii) / dcazerr->at(ii)) >= 3.0) continue;
-        ++Ntrk_off;
+        Ntrk_off = Ntrk_off+1;
     }
 
     return Ntrk_off;
 }
-
 
 /*
 Calculate q invariant
