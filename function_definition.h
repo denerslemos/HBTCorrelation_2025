@@ -34,7 +34,7 @@ int get_Ntrkoff(std::vector<float>* pt,
         if (pt->at(ii) <= 0.3) continue;
         if (std::fabs(eta->at(ii)) > 2.4) continue;
         if (!hp->at(ii)) continue;
-        if (std::fabs(pterr->at(ii) / pt->at(ii)) >= 0.1) continue;
+        if (pterr->at(ii) / pt->at(ii) >= 0.1) continue;
         if (std::fabs(dcaxy->at(ii) / dcaxyerr->at(ii)) >= 3.0) continue;
         if (std::fabs(dcaz->at(ii) / dcazerr->at(ii)) >= 3.0) continue;
         Ntrk_off = Ntrk_off+1;

@@ -161,7 +161,8 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		} else if(syst == 6){ cent = (int) (0.92 * (float)hiBin / 0.95);
 		} else{ cent = (int) hiBin; }
 		cent = 1; // hiBin not stored well in the forest yet
-		int Ntroff = get_Ntrkoff( trkpt, trketa, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr);
+		int Ntroff = 0;
+		if(!use_centrality) Ntroff = get_Ntrkoff( trkpt, trketa, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr);
 
 		centrality_beforefilters->Fill(cent);
 		vzhist_beforefilters->Fill(vertexz);
@@ -185,9 +186,9 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		centrality->Fill(cent);
 		vzhist->Fill(vertexz);
 
-		if(Ntroff < 10) continue; // just to remove MB track inneficiency		
-		if(!use_centrality) if(Ntroff > 500) continue; // remove events with multiplicity > 250 to speed up the code
 		if(use_centrality) if(hiBin > 180) continue; // remove 90% events due EM contamination
+		if(!use_centrality && Ntroff < 10) continue; // just to remove MB track inneficiency		
+		if(!use_centrality) if(Ntroff > 500) continue; // remove events with multiplicity > 250 to speed up the code
 		Nevents->Fill(5); // filled after each event cut	
 
 		// Vectors used for objects
@@ -202,7 +203,6 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		// Start loop over reco tracks (trksize is number of reco tracks)
 		CheckNtrk->Fill(ntrk);
 		if(ntrk < 2) continue; // speed up code
-		//if(ntrk > 9999) continue; // reduces PU effect (to be added later)
 
 		for (int j = 0; j < ntrk; j++){ 
 	
@@ -266,6 +266,8 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
      		tracks_reco.push_back(TrackFourVector);
 			track_charge_reco.push_back(trkcharge->at(j)); 
 			track_weight_reco.push_back(trk_weight); 
+			
+			if(use_centrality) Ntroff = Ntroff + 1;
 
 		} // End loop over tracks
 	
@@ -298,7 +300,7 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 				// Kinematic and charge cuts
 				if(fabs(gen_trketa->at(j)) > 2.4) continue;
 				if(gen_trkpt->at(j) <= 0.2)continue;
-				if(fabs(gen_trkchg->at(j)) == 0) continue;
+				if(gen_trkchg->at(j) == 0) continue;
 				// Track/particle QA histogram filling
 				double x_gen_trk[5]={gen_trkpt->at(j), gen_trketa->at(j), gen_trkphi->at(j), (double) gen_trkchg->at(j), (double) (use_centrality ? cent : Ntroff) }; 	
 				hist_gen_trk->Fill(x_gen_trk);
