@@ -162,7 +162,7 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		} else{ cent = (int) hiBin; }
 		cent = 1; // hiBin not stored well in the forest yet
 		int Ntroff = 0;
-		if(!use_centrality) Ntroff = get_Ntrkoff( trkpt, trketa, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr);
+		if(!use_centrality) Ntroff = get_Ntrkoff( trkpt, trketa, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr );
 
 		centrality_beforefilters->Fill(cent);
 		vzhist_beforefilters->Fill(vertexz);
@@ -202,7 +202,6 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		// ------------------- Reconstruction level (Data and MC) ----------------------------
 		// Start loop over reco tracks (trksize is number of reco tracks)
 		CheckNtrk->Fill(ntrk);
-		if(ntrk < 2) continue; // speed up code
 
 		for (int j = 0; j < ntrk; j++){ 
 	
@@ -266,10 +265,10 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
      		tracks_reco.push_back(TrackFourVector);
 			track_charge_reco.push_back(trkcharge->at(j)); 
 			track_weight_reco.push_back(trk_weight); 
-			
-			if(use_centrality) Ntroff = Ntroff + 1;
 
 		} // End loop over tracks
+	
+		if(use_centrality) Ntroff = (int) tracks_reco.size();
 	
 		multiplicity->Fill(Ntroff);
 		MultVSCent->Fill(Ntroff,cent);
@@ -292,11 +291,8 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		// Generator level --> MC only
 		if(is_MC){
 
-			mcmultiplicity->Fill(genmult);
-			if(gen_trkpt->size() < 2) continue;
-			//if(gen_trkpt->size() > 9999) continue;
-
 			for(int j = 0; j < (int)gen_trkpt->size(); j++){ 
+			
 				// Kinematic and charge cuts
 				if(fabs(gen_trketa->at(j)) > 2.4) continue;
 				if(gen_trkpt->at(j) <= 0.2)continue;
@@ -312,8 +308,11 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
      		
      			tracks_gen.push_back(TrackFourVectorGen);
 				track_charge_gen.push_back(gen_trkchg->at(j)); 
-				track_weight_gen.push_back(1.0); 						
+				track_weight_gen.push_back(1.0); 				
+						
 			} // End loop over gen tracks
+
+			mcmultiplicity->Fill(tracks_gen.size());
 
 			if(tracks_gen.size() > 1){
 				twoparticlecorrelation(tracks_gen, track_charge_gen, track_weight_gen, hist_pairSS_Mass_gen, hist_dpt_cos_SS_gen, hist_qinv_SS_gen, hist_qinv_SS_gen_INV, hist_qinv_SS_gen_ROT, hist_q3D_SS_gen, hist_q3D_SS_gen_INV, hist_q3D_SS_gen_ROT, hist_pairOS_Mass_gen, hist_dpt_cos_OS_gen, hist_qinv_OS_gen, hist_qinv_OS_gen_INV, hist_qinv_OS_gen_ROT, hist_q3D_OS_gen, hist_q3D_OS_gen_INV, hist_q3D_OS_gen_ROT, (use_centrality ? cent : Ntroff), dosplit, do_hbt3d, do_gamov, syst); // HBT correlations done at this step
@@ -328,7 +327,7 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 			tracks_gen.clear();
 			track_weight_gen.clear();
 			track_charge_gen.clear();
-
+			
 		} // End of MC IF statement
 		
 	} // End of event loop
