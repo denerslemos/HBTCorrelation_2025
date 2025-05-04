@@ -84,6 +84,17 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 	if(syst == 2) fileeff = TFile::Open("efftables/XeXe_eff_wide_table_94x_cent.root");
 	if(syst == 3) fileeff = TFile::Open("efftables/XeXe_eff_tight_table_94x_cent.root");
 	if(syst == 4) fileeff = TFile::Open("efftables/XeXe_eff_loose_table_94x_cent.root");
+	
+	TH2 *trkeff_file010 = nullptr; 
+	fileeff->GetObject("rTotalEff3D_0_10", trkeff_file010);
+	TH2 *trkeff_file1030 = nullptr; 
+	fileeff->GetObject("rTotalEff3D_10_30", trkeff_file1030);
+	TH2 *trkeff_file3050 = nullptr; 
+	fileeff->GetObject("rTotalEff3D_30_50", trkeff_file3050);
+	TH2 *trkeff_file5070 = nullptr; 
+	fileeff->GetObject("rTotalEff3D_50_70", trkeff_file5070);
+	TH2 *trkeff_file70100 = nullptr; 
+	fileeff->GetObject("rTotalEff3D_70_100", trkeff_file70100);	
 	*/
 	// Read the list of input file(s)
 	fstream inputfile;
@@ -160,6 +171,15 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 		if(syst == 5){ cent = (int) (0.98 * (float)hiBin / 0.95);
 		} else if(syst == 6){ cent = (int) (0.92 * (float)hiBin / 0.95);
 		} else{ cent = (int) hiBin; }
+
+		/*
+		TH2 *trkeff_file = nullptr; 
+		if(hiBin <= 20){trkeff_file = (TH2*)trkeff_file010->Clone();
+		}else if (hiBin > 20 && hiBin <= 60){trkeff_file = (TH2*)trkeff_file1030->Clone();
+		}else if (hiBin > 60 && hiBin <= 100){trkeff_file = (TH2*)trkeff_file3050->Clone();
+		}else if (hiBin > 100 && hiBin <= 140){trkeff_file = (TH2*)trkeff_file5070->Clone();
+		}else if (hiBin > 140){trkeff_file = (TH2*)trkeff_file70100->Clone();}
+		*/
 		cent = 1; // hiBin not stored well in the forest yet
 		int Ntroff = 0;
 		if(!use_centrality) Ntroff = get_Ntrkoff( trkpt, trketa, highpur, trkpterr, trkdcaxy, trkdcaxyerr, trkdcaz, trkdcazerr );
@@ -253,7 +273,8 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 
 			// Track efficiency correction
 			double trk_weight = 1.0;
-			//trk_weight = trk_weight*getTrkCorrWeight(fileeff, cent, trkpt->at(j), trketa->at(j));
+			//trk_weight = trk_weight*getTrkCorrWeight(trkeff_file, trkpt->at(j), trketa->at(j));
+			
 			hist_reco_trk_corr->Fill(x_reco_trk,trk_weight);
 			
 		    ROOT::Math::PtEtaPhiMVector TrackFourVector;
@@ -267,6 +288,8 @@ void correlation_2025(TString input_file, TString ouputfile, int isMC, int doqui
 			track_weight_reco.push_back(trk_weight); 
 
 		} // End loop over tracks
+
+		//trkeff_file->Reset("ICESM"); // clear the efficiency histograms	
 	
 		if(use_centrality) Ntroff = (int) tracks_reco.size();
 	
